@@ -78,9 +78,10 @@ def proposito(texto, palabras=50):
     return response
 
 
-def resumir_parrafo(texto, palabras=50):
+def resumir_parrafo(texto, prompt_usuario, palabras=50):
     print("Resumiendo texto...")
     prompt = (
+        f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
         "- Resume el siguiente párrafo de forma natural, clara y coherente.\n"
         f"### PÁRRAFO DE ENTRADA:\n{texto}\n\n"
 
@@ -90,6 +91,7 @@ def resumir_parrafo(texto, palabras=50):
         "- No uses comillas, markdown ni ningún formato adicional.\n"
         f"- Máximo: {palabras} palabras.\n"
         "- El texto de salida debe estar en el MISMO idioma que el original.\n\n"
+
     )
     response = ollama(prompt, modelo=config.modelo_actual)
     print("Enviando texto resumido...")
@@ -99,6 +101,7 @@ def parafrasear_parrafo(texto, prompt_usuario):
     print("Parafraseando párrafo...")
 
     prompt = (
+    f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
     "- Parafrasea el siguiente párrafo utilizando un lenguaje distinto, manteniendo el mismo significado y tono.\n"
     f"### TEXTO A PARAFRASEAR:\n{texto}\n\n"
 
@@ -109,7 +112,6 @@ def parafrasear_parrafo(texto, prompt_usuario):
     "- Respeta la intención del texto (formal, técnico, narrativo, etc.).\n"
     "- No uses comillas, encabezados, markdown ni explicaciones.\n"
     "- El texto resultante debe estar en el MISMO idioma que el original.\n\n"
-    f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
 )
     response = ollama(prompt, modelo=config.modelo_actual)
     print("Enviando texto parafraseado...")
@@ -119,6 +121,7 @@ def reescribir(resumenes, proposito, texto, prompt_usuario):
     print("Reescribiendo con estilo mejorado...")
 
     prompt = (
+    f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
     f"A partir del siguiente contexto y propósito. "
     f"### CONTEXTO (resumen de los párrafos anteriores):\n{resumenes}\n\n"
     f"### PROPOSITO DEL TEXTO ACTUAL:\n{proposito}\n\n"
@@ -134,7 +137,6 @@ def reescribir(resumenes, proposito, texto, prompt_usuario):
     "- No elimines ni agregues información.\n"
     "- No uses comillas, encabezados, markdown ni explicaciones.\n"
     "- El resultado debe estar en el MISMO idioma que el texto original.\n\n"
-    f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
 )
     response = ollama(prompt, modelo=config.modelo_actual)
     print("Enviando texto reescrito...")
@@ -144,6 +146,7 @@ def explicar(texto, prompt_usuario):
     print("Explicando en lenguaje sencillo...")
 
     prompt = (
+        f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
         "- Explica el siguiente texto de forma clara, sencilla y accesible.\n"
         f"### TEXTO A EXPLICAR:\n{texto}\n\n"
 
@@ -155,7 +158,6 @@ def explicar(texto, prompt_usuario):
         "- No agregues opiniones, explicaciones meta ni juicios personales.\n"
         "- No uses comillas, encabezados ni formato adicional.\n"
         "- Mantén el idioma del texto original.\n\n"
-        f"-Considera de mayor importancia el prompt del usuario {prompt_usuario}"
     )
 
     response = ollama(prompt, modelo=config.modelo_actual)

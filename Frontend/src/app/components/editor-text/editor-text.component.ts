@@ -6,6 +6,7 @@ import { ViewChild } from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
 import { ModelService } from '../../core/services/model.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Router } from 'express';
 
 @Component({
   selector: 'app-editor-text',
@@ -35,7 +36,27 @@ export class EditorTextComponent {
   accionesLeft = 0;
   accionSeleccionada = "";
   instruccionUsuario = ""
+  ultimaAccion = '';
+  ultimaInstruccion: string = '';
+  ultimaAccionReal: string = '';  
+  ultimaSeleccion: string = '';
+  ultimaSugerenciaTexto: string = '';
+
+
   constructor(private model:ModelService){}
+
+ngOnInit(): void {
+  const guardado = localStorage.getItem('tituloArchivo');
+  const contenido = localStorage.getItem('contenidoArchivo');
+
+  if (guardado) {
+    this.fileName = guardado;
+  }
+
+  if (contenido) {
+    this.htmlContent = contenido; 
+  }
+}
 
   toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],
@@ -64,6 +85,10 @@ export class EditorTextComponent {
         console.warn('Texto vacío o inválido. No se enviará al backend.');
         return;
       }
+
+      this.ultimaAccion = 'auto';
+      this.ultimaSugerenciaTexto = text;
+
       this.model.obtenerSugerencia(text).subscribe({
         next: res => {
           console.log('Respuesta de Flask:', res.respuesta); 
@@ -74,7 +99,8 @@ export class EditorTextComponent {
         error: err => {
           console.error('Error:', err);
         }
-      });      
+      });
+      this.mostrarAyuda= false;
   }
 
 
@@ -114,7 +140,6 @@ export class EditorTextComponent {
   rechazarAyuda(){
     this.mostrarAyuda= false;
     this.mostrarAcciones= false;
-    this,this.accionSeleccionada = "";
     this.mostrarAccionSeleccionada = false;
 
   }
@@ -154,7 +179,7 @@ export class EditorTextComponent {
 
   mostrarTooltipCercaDelCursor() {
 
-    if (this.accionSeleccionada || this.mostrarAcciones) return;
+    if (this.mostrarAccionSeleccionada || this.mostrarAcciones) return;
     this.mostrarAyuda = true;
 
     setTimeout(() => {
@@ -187,6 +212,7 @@ export class EditorTextComponent {
 accionIA(tipo: string) {
     const selection = this.editor?.quillEditor.getSelection();
     const textoSeleccionado = this.editor?.quillEditor.getText(selection?.index, selection?.length);
+    this.mostrarAcciones = false;
     this.mostrarAccionSeleccionada = true;
 
     if (textoSeleccionado && selection) {
@@ -194,10 +220,9 @@ accionIA(tipo: string) {
       this.instruccionUsuario = '';   
     }
 
-    this.mostrarAcciones = false;
   }
 
-  enviarInstruccion() {
+enviarInstruccion() {
     if (!this.accionSeleccionada || !this.instruccionUsuario.trim()) return;
 
     const seleccion = this.editor?.quillEditor.getSelection();
@@ -211,30 +236,80 @@ accionIA(tipo: string) {
 
     const data = {
       texto: textoCompleto,
-      textoSeleccionado: textoSeleccionado,
+      textoSeleccionado,
       accion: this.accionSeleccionada,
       instruccion: this.instruccionUsuario
     };
 
-    console.log("ENVIANDO:", data);
-
+    this.ultimaAccion = 'instruccion';
+    this.ultimaAccionReal = this.accionSeleccionada; 
+    this.ultimaInstruccion = this.instruccionUsuario;
+    this.ultimaSeleccion = textoSeleccionado;
 
     this.model.accionSobreTexto(data).subscribe({
-    next: res => {
-      console.log("Respuesta del backend:", res.respuesta);
-      const sugerencia = res.respuesta || "Sugerencia automática..."
-      this.sugerencia = sugerencia;
-      this.simularEscritura(sugerencia)
-      
-    },
-    error: err => {
-      console.error("Error en petición:", err);
-    }
-  });
+      next: res => {
+        const sugerencia = res.respuesta || "Sugerencia automática...";
+        this.sugerencia = sugerencia;
+        this.simularEscritura(sugerencia);
+      },
+      error: err => {
+        console.error("Error en petición:", err);
+      }
+    });
 
-    this.accionSeleccionada = "";
+    this.accionSeleccionada = '';
     this.instruccionUsuario = '';
-    this.mostrarAcciones = false;
+    this.mostrarAccionSeleccionada = false;
+}
+
+
+repetirUltimaAccion() {
+  const textoCompleto = this.editor?.quillEditor.getText();
+
+  if (this.ultimaAccion === 'instruccion') {
+    if (!this.ultimaSeleccion || !this.ultimaInstruccion || !textoCompleto) {
+      console.warn("Faltan datos para repetir la acción personalizada.");
+      return;
+    }
+
+    const data = {
+      texto: textoCompleto,
+      textoSeleccionado: this.ultimaSeleccion,
+      accion: this.ultimaAccionReal,
+      instruccion: this.ultimaInstruccion
+    };
+
+    this.model.accionSobreTexto(data).subscribe({
+      next: res => {
+        const sugerencia = res.respuesta || "Sugerencia automática...";
+        this.sugerencia = sugerencia;
+        this.simularEscritura(sugerencia);
+      },
+      error: err => {
+        console.error("Error al repetir acción personalizada:", err);
+      }
+    });
+
+  } else if (this.ultimaAccion === 'auto') {
+    if (!this.ultimaSugerenciaTexto.trim()) {
+      console.warn("No hay texto para repetir sugerencia automática.");
+      return;
+    }
+
+    this.model.obtenerSugerencia(this.ultimaSugerenciaTexto).subscribe({
+      next: res => {
+        const sugerencia = res.respuesta || "Sugerencia automática...";
+        this.sugerencia = sugerencia;
+        this.simularEscritura(sugerencia);
+      },
+      error: err => {
+        console.error("Error al repetir sugerencia automática:", err);
+      }
+    });
+
+  } else {
+    console.warn("No hay acción anterior para repetir.");
+  }
 }
 
 }

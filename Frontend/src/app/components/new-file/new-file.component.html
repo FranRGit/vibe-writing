@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <div class="border rounded p-5 text-center position-relative drag-drop d-flex flex-column align-items-center justify-content-center"
+        (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="fileInput.click()"
+        style="background-color: #f8f9fa; cursor: pointer; min-height: 250px;">
+    
+        <img src="https://cdn-icons-png.flaticon.com/512/126/126477.png" alt="Upload" width="60" class="mb-3" />
+
+        <p class="mb-2">Arrastra un archivo aquí o haz clic para seleccionar</p>
+
+        <button class="btn btn-secondary btn-sm mb-2" type="button">Seleccionar archivo</button>
+
+        <input type="file" hidden (change)="onFileSelected($event)" #fileInput />
+    
+    </div>
+
+
+    <div class="d-flex justify-content-center align-items-center mt-4">
+        <label for="titulo" class="form-label me-2 mb-0"> Título del documento:</label>
+        <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" placeholder="Ingresa un título" style="max-width: 400px;"/>
+        <div class="crear-doc">
+            <button class="btn btn-secondary" (click)="crearDocumento()">Crear Documento</button>
+        </div>
+    </div>
+
+
+</div>

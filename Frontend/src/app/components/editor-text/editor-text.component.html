@@ -17,7 +17,7 @@
                 <i class="fa fa-check-circle me-1"></i> Aceptar
                 </button>
 
-                <button class="btn btn-sm btn-warning me-2" (click)="getSugerenciaAuto()">
+                <button class="btn btn-sm btn-warning me-2" (click)="repetirUltimaAccion()">
                 <i class="fa fa-sync-alt me-1"></i> Reescribir
                 </button>
 
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Tooltip de instrucción tras elegir acción -->
-    <div *ngIf="accionSeleccionada" class="tooltip-acciones position-absolute p-3 rounded shadow-sm bg-white border" [ngStyle]="{ top: accionesTop + 'px', left: accionesLeft + 'px' }" style="z-index: 2001; width: 300px;">
+    <div *ngIf="mostrarAccionSeleccionada" class="tooltip-acciones position-absolute p-3 rounded shadow-sm bg-white border" [ngStyle]="{ top: accionesTop + 'px', left: accionesLeft + 'px' }" style="z-index: 2001; width: 300px;">
         <strong>¿Qué deseas hacer?</strong>
         <div class="mb-2">
             <span class="badge bg-primary">{{ accionSeleccionada | titlecase }}</span>

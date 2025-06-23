@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ModelService } from '../../core/services/model.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [HttpClientModule],
   providers: [ModelService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
