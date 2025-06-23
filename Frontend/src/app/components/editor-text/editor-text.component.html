@@ -1,0 +1,71 @@
+    <!-- Editor de texto -->
+<div #editorWrapper class="position-relative">
+    <div class="d-flex flex-column justify-content editor-text-container">
+        <div class="editor-header d-flex align-items-center bg-light border-bottom p-2">
+            <img class="m-1" src="assets/icons/file-text.png" style="width: 25x; height: 25px;">
+            <strong class="me-2">Nombre del Documento:</strong>
+            <span>{{ fileName || 'Documento de Vibe-Writing' }}</span>
+        </div>
+        <quill-editor [(ngModel)]="htmlContent" [modules]="modules" [style]="{ height: '600px'}" #quillRef></quill-editor>
+
+        <div *ngIf="sugerenciaParcial || escribiendo" class="sugerencia mt-3 p-2 border rounded">
+            <span class="text-muted">Sugerencia de {{modelo}}:</span>
+            <p class="sugerencia-texto mt-2">{{ sugerenciaParcial }}</p>
+
+            <div *ngIf="sugerenciaActiva" class="text-end mt-2">
+                <button class="btn btn-sm btn-success me-2" (click)="aceptarSugerencia()">
+                <i class="fa fa-check-circle me-1"></i> Aceptar
+                </button>
+
+                <button class="btn btn-sm btn-warning me-2" (click)="getSugerenciaAuto()">
+                <i class="fa fa-sync-alt me-1"></i> Reescribir
+                </button>
+
+                <button class="btn btn-sm btn-danger" (click)="rechazarSugerencia()">
+                <i class="fa fa-times-circle me-1"></i> Rechazar
+                </button>
+
+            </div>
+    </div>
+
+    <!-- Mostrar tootlip opciones -->
+    <div *ngIf="mostrarAcciones" class="tooltip-acciones position-absolute p-3 rounded shadow-sm bg-light border" [ngStyle]="{ top: accionesTop + 'px', left: accionesLeft + 'px' }" style="z-index: 2000; width: 280px;">
+    <strong>¿Qué deseas hacer?</strong>
+    <p class="text-muted" style="font-size: 0.9em;">Elige una opción para ayudarte</p>
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-sm btn-primary" (click)="accionIA('parafrasear')">Parafrasear</button>
+        <button class="btn btn-sm btn-secondary" (click)="accionIA('resumir')">Resumir</button>
+        <button class="btn btn-sm btn-info" (click)="accionIA('explicar')">Explicar</button>
+        <button class="btn btn-sm btn-warning" (click)="accionIA('reescribir')">Reescribir</button>
+        <button class="btn btn-sm btn-success" (click)="accionIA('sugerir')">Sugerencia</button>
+    </div>
+    </div>
+
+    <!-- Mostrar tootlip ayuda-->
+    <div #tooltip *ngIf="mostrarAyuda" class="tooltip-ia mt-2 p-3 border rounded shadow-sm bg-light text-center position-absolute" style="max-width: 300px;">
+        <strong>¿Necesitas ayuda?</strong>
+        <p class="mb-2 text-muted" style="font-size: 0.9em;">Puedo continuar con el texto</p>
+        <button class="btn btn-success btn-sm me-2" (click)="getSugerenciaAuto()">
+            <i class="fa fa-magic me-1"></i> Sugerir
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="rechazarAyuda()">✗ Rechazar</button>
+    </div>
+
+    <!-- Tooltip de instrucción tras elegir acción -->
+    <div *ngIf="accionSeleccionada" class="tooltip-acciones position-absolute p-3 rounded shadow-sm bg-white border" [ngStyle]="{ top: accionesTop + 'px', left: accionesLeft + 'px' }" style="z-index: 2001; width: 300px;">
+        <strong>¿Qué deseas hacer?</strong>
+        <div class="mb-2">
+            <span class="badge bg-primary">{{ accionSeleccionada | titlecase }}</span>
+        </div>
+        <input type="text" [(ngModel)]="instruccionUsuario" placeholder="Ej: Usa un lenguaje más informal" class="form-control form-control-sm mb-2" />
+        <div class="text-end">
+            <button class="btn btn-sm btn-success" (click)="enviarInstruccion()">
+            <i class="fa fa-paper-plane me-1"></i> Enviar
+            </button>
+        <button class="btn btn-danger btn-sm" (click)="rechazarAyuda()">✗ Rechazar</button>
+
+        </div>
+    </div>
+    </div> 
+
+</div>

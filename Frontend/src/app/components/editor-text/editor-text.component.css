@@ -1,0 +1,59 @@
+.editor-text-container{
+    margin: 25px;
+    margin-top: 50px;
+    margin-left:150px;
+    margin-right: 150px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+
+quill-editor ::ng-deep .ql-toolbar.ql-snow {
+    border: none !important;
+    border-bottom: #ced4da;
+    border-radius: 0 !important;
+}
+
+quill-editor ::ng-deep .ql-container.ql-snow {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.sugerencia {
+    background-color: #f3f4f6;
+    color: #000000;
+    font-weight: bold;
+}
+
+.sugerencia-texto {
+    color: #5e5e5e;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+}
+
+.tooltip-ia{
+    z-index: 1000;
+}
+
+.editor-text-container {
+    height: calc(90vh - 120px); 
+    overflow-y: auto;
+    overflow-x: visible;
+
+}
+
+
+.ql-editor {
+    min-height: 200px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+.editor-header {
+    top: 0;
+}
+
+.tooltip-acciones {
+    z-index: 9999;
+    position: absolute;
+}

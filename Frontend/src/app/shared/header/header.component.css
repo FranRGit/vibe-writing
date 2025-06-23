@@ -1,0 +1,37 @@
+h1 {
+    font-family: 'Roboto';
+    font-weight: 900;
+    font-size: 40px;
+}
+
+header {
+    background-color: white; 
+    position: relative;
+    z-index: 10;
+}
+
+
+.header-container{
+    margin: 25px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+.btn-model{
+    background-color: black;
+    color: white;
+    width: 210px;
+    height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: space-between;
+}
+.modelo-nombre {
+    font-weight: normal;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+

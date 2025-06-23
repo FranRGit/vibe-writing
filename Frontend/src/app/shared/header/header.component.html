@@ -1,0 +1,27 @@
+<header>
+    <div class="d-flex justify-content-between align-items-center header-container">
+        <div class="d-flex align-items-center gap-2 ia-container">
+            <img src="assets/icons/cpu.png" alt="Logo icon" style="width: 35x; height: 35px;" />
+            <h6 class="mb-0">
+                Inteligencia Artificial
+            </h6>
+        </div>
+        <div class="title-container">
+            <h1 class="m-0">VIBE WRITING</h1>
+        </div>
+        <div class="model-container">
+        <div class="dropdown">
+            <button class="btn-model btn dropdown-toggle d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div><strong>Modelo:</strong></div>
+            <div class="modelo-nombre">{{ modeloSeleccionado }}</div>
+            </button>
+            <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="seleccionarModelo('llama3.2:latest')">LLaMA 3.2</a></li>
+            <li><a class="dropdown-item" (click)="seleccionarModelo('mistral-nemo:latest')">Mistral Nemo</a></li>
+            <li><a class="dropdown-item" (click)="seleccionarModelo('deepseek-v2')">Deepseek V2</a></li>
+            </ul>
+        </div>
+        </div>
+
+    </div>
+</header>
